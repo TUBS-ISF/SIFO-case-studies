@@ -1,0 +1,158 @@
+package EmailSystem;
+
+import annotations.high;
+import annotations.low;
+
+public class Email {
+	protected @low int id;
+
+	protected @low String subject;
+
+	protected @high String body;
+
+	protected @low Client from;
+
+	protected @low String to;
+
+	static @low int emailCounter = 1;
+
+	public Email(@low int id) {
+		this.id = id;
+	}
+
+	static Email createEmail(@low Client from, @low String to, @low String subject, @high String body) {
+		Email msg = new Email(emailCounter++);
+		msg.setEmailFrom(from); 				
+		msg.setEmailTo(to); 					
+		msg.setEmailSubject(subject); 			
+		msg.setEmailBody(body); 				
+		return msg; 							
+	}
+
+	/*@pure@*/ @high boolean isReadable() {
+		if (!isEncrypted())
+			return true;
+		else
+			return false;
+	}
+
+	private static void printMail__wrappee__Base(@low Email msg) {
+		Util.prompt("ID:  " + msg.getId());
+		Util.prompt("FROM: " + msg.getEmailFrom());
+		Util.prompt("TO: " + msg.getEmailTo());
+		Util.prompt("SUBJECT: " + msg.getEmailSubject());
+		//Util.prompt("IS_READABLE " + msg.isReadable()); //high
+		//Util.prompt("BODY: " + msg.getEmailBody());		//high
+	}
+
+	private static void printMail__wrappee__Encrypt(@low Email msg) {
+		printMail__wrappee__Base(msg);
+		//Util.prompt("ENCRYPTED " + msg.isEncrypted()); //high
+
+	}
+
+	private static void printMail__wrappee__Sign(@low Email msg) {
+		printMail__wrappee__Encrypt(msg);
+		//Util.prompt("SIGNED " + msg.isSigned()); //high
+		//Util.prompt("SIGNATURE " + msg.getEmailSignKey()); //high
+	}
+
+	static void printMail(@low Email msg) {
+		printMail__wrappee__Sign(msg);
+		//Util.prompt("SIGNATURE VERIFIED " + msg.isSignatureVerified()); //high
+	}
+
+	@low Email cloneEmail(@low Email msg) {
+		try {
+			return (Email) this.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new Error("Clone not supported");
+		}
+	}
+
+	/*@pure@*/ @low Client getEmailFrom() {
+		return from;
+	}
+
+	@low @low int getId() {
+		return id;
+	}
+
+	@low @low String getEmailSubject() {
+		return subject;
+	}
+
+	@low @low String getEmailTo() {
+		return to;
+	}
+
+	@low void setEmailBody(@high String value) {
+		body = value;
+	}
+
+	@low void setEmailFrom(@low Client value) {
+		this.from = value;
+	}
+
+	@low void setEmailSubject(@low String value) {
+		this.subject = value;
+	}
+
+	@low void setEmailTo(@low String value) {
+		to = value;
+	}
+
+	@high String getEmailBody() {
+		return body;
+	}
+
+	protected @high boolean isEncrypted;
+
+	protected @high int encryptionKey;
+
+	@low /*@pure@*/ @high boolean isEncrypted() {
+		return isEncrypted;
+	}
+
+	@low void setEmailIsEncrypted(@high boolean value) {
+		isEncrypted = value; //shoudl encrypt or decrypt the body of the message
+	}
+
+	@low void setEmailEncryptionKey(@high int value) {
+		this.encryptionKey = value;
+	}
+
+	@low /*@pure@*/ @high int getEmailEncryptionKey() {
+		return encryptionKey;
+	}
+
+	protected @high boolean signed;
+
+	protected @high int signkey;
+
+	@low void setEmailIsSigned(@high boolean value) {
+		signed = value;
+	}
+
+	@low void setEmailSignKey(@high int value) {
+		signkey = value;
+	}
+
+	@low @high boolean isSigned() {
+		return signed;
+	}
+
+	@low /*@pure@*/ @high int getEmailSignKey() {
+		return signkey;
+	}
+
+	@low protected @high boolean isSignatureVerified;
+
+	@low /*@pure@*/ @high boolean isSignatureVerified() {
+		return isSignatureVerified;
+	}
+
+	@low void setIsSignatureVerified(@high boolean value) {
+		this.isSignatureVerified = value;
+	}
+}
