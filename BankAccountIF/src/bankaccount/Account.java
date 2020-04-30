@@ -1,6 +1,8 @@
 package bankaccount;
 import annotations.high;
 import annotations.low;
+import annotations.mut;
+import annotations.read;
 
 public class Account {
 	final @high int OVERDRAFT_LIMIT  = -5000;
@@ -15,33 +17,33 @@ public class Account {
 
 	/*@ invariant balance >= OVERDRAFT_LIMIT; @*/
 
-	@high Balance balance = new Balance(0, 0);
+	@high @mut Balance balance = new Balance(0, 0);
 
 	/*@ 
-	 ensures balance == 0;
+	 ensures balance.balance == 0;
 	assignable balance; @*/
 	Account() {
 	}
 
 	/*@ 
-	 ensures (balance >= 0 ==> \result >= 0) 
-	   && (balance <= 0 ==> \result <= 0); @*/
-	 @low public /*@pure@*/  @high int calculateInterest() {
+	 ensures (balance.balance >= 0 ==> \result >= 0) 
+	   && (balance.balance <= 0 ==> \result <= 0); @*/
+	 @low @read public /*@pure@*/  @high int calculateInterest() {
 		return balance.balance * INTEREST_RATE / 36500;
 	}
 
 	/*@ 
 	 requires daysLeft >= 0;
 	ensures calculateInterest() >= 0 ==> \result >= interest; @*/
-	 @low public /*@pure@*/  @high int estimatedInterest(@low int daysLeft) {
+	 @low @read public /*@pure@*/  @high int estimatedInterest(@low int daysLeft) {
 		return interest + daysLeft * calculateInterest();
 	}
 
 	/*@ 
 	 requires amount >= 0;
-	ensures balance >= amount <==> \result;
+	ensures balance.balance >= amount <==> \result;
 	assignable \nothing; @*/
-	@high public @high boolean credit(@low int amount) {
+	@high @read public @high boolean credit(@low int amount) {
 		return balance.balance >= amount;
 	}
 
@@ -50,21 +52,21 @@ public class Account {
 	/*@ 
 	 ensures this.lock;
 	assignable lock; @*/
-	@low public void lock() {
+	@low @mut public void lock() {
 		lock = true;
 	}
 
 	/*@ 
 	 ensures !this.lock;
 	assignable lock; @*/
-	@low public void unLock() {
+	@low @mut public void unLock() {
 		lock = false;
 	}
 
 	/*@ 
 	 ensures \result == this. lock;
 	assignable \nothing; @*/
-	@low public @low boolean isLocked() {
+	@low @read public @low boolean isLocked() {
 		return lock;
 	}
 

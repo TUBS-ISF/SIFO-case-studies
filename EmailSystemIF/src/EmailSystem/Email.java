@@ -2,6 +2,8 @@ package EmailSystem;
 
 import annotations.high;
 import annotations.low;
+import annotations.mut;
+import annotations.read;
 
 public class Email {
 	protected @low int id;
@@ -10,7 +12,7 @@ public class Email {
 
 	protected @high String body;
 
-	protected @low Client from;
+	protected @low @mut Client from;
 
 	protected @low String to;
 
@@ -20,8 +22,8 @@ public class Email {
 		this.id = id;
 	}
 
-	static Email createEmail(@low Client from, @low String to, @low String subject, @high String body) {
-		Email msg = new Email(emailCounter++);
+	static @low @mut Email createEmail(@low @mut Client from, @low String to, @low String subject, @high String body) {
+		@low @mut Email msg = new Email(emailCounter++);
 		msg.setEmailFrom(from); 				
 		msg.setEmailTo(to); 					
 		msg.setEmailSubject(subject); 			
@@ -29,14 +31,14 @@ public class Email {
 		return msg; 							
 	}
 
-	/*@pure@*/ @high boolean isReadable() {
+	@low @mut public /*@pure@*/ @high boolean isReadable() {
 		if (!isEncrypted())
 			return true;
 		else
 			return false;
 	}
 
-	private static void printMail__wrappee__Base(@low Email msg) {
+	private static void printMail__wrappee__Base(@low @mut Email msg) {
 		Util.prompt("ID:  " + msg.getId());
 		Util.prompt("FROM: " + msg.getEmailFrom());
 		Util.prompt("TO: " + msg.getEmailTo());
@@ -45,64 +47,64 @@ public class Email {
 		//Util.prompt("BODY: " + msg.getEmailBody());		//high
 	}
 
-	private static void printMail__wrappee__Encrypt(@low Email msg) {
+	private static void printMail__wrappee__Encrypt(@low @mut Email msg) {
 		printMail__wrappee__Base(msg);
 		//Util.prompt("ENCRYPTED " + msg.isEncrypted()); //high
 
 	}
 
-	private static void printMail__wrappee__Sign(@low Email msg) {
+	private static void printMail__wrappee__Sign(@low @mut Email msg) {
 		printMail__wrappee__Encrypt(msg);
 		//Util.prompt("SIGNED " + msg.isSigned()); //high
 		//Util.prompt("SIGNATURE " + msg.getEmailSignKey()); //high
 	}
 
-	static void printMail(@low Email msg) {
+	static void printMail(@low @mut Email msg) {
 		printMail__wrappee__Sign(msg);
 		//Util.prompt("SIGNATURE VERIFIED " + msg.isSignatureVerified()); //high
 	}
 
-	@low Email cloneEmail(@low Email msg) {
-		try {
+	@low @mut public @low @mut Email cloneEmail(@low @mut Email msg) {
+//		try {
 			return (Email) this.clone();
-		} catch (CloneNotSupportedException e) {
-			throw new Error("Clone not supported");
-		}
+//		} catch (CloneNotSupportedException e) {
+//			throw new Error("Clone not supported");
+//		}
 	}
 
-	/*@pure@*/ @low Client getEmailFrom() {
+	@low @mut public /*@pure@*/ @low @mut Client getEmailFrom() {
 		return from;
 	}
 
-	@low @low int getId() {
+	@low @read public @low int getId() {
 		return id;
 	}
 
-	@low @low String getEmailSubject() {
+	@low @read public @low String getEmailSubject() {
 		return subject;
 	}
 
-	@low @low String getEmailTo() {
+	@low @read public @low String getEmailTo() {
 		return to;
 	}
 
-	@low void setEmailBody(@high String value) {
+	@low @mut public void setEmailBody(@high String value) {
 		body = value;
 	}
 
-	@low void setEmailFrom(@low Client value) {
+	@low @mut public void setEmailFrom(@low @mut Client value) {
 		this.from = value;
 	}
 
-	@low void setEmailSubject(@low String value) {
+	@low @mut public void setEmailSubject(@low String value) {
 		this.subject = value;
 	}
 
-	@low void setEmailTo(@low String value) {
+	@low @mut public void setEmailTo(@low String value) {
 		to = value;
 	}
 
-	@high String getEmailBody() {
+	@low @read public @high String getEmailBody() {
 		return body;
 	}
 
@@ -110,19 +112,19 @@ public class Email {
 
 	protected @high int encryptionKey;
 
-	@low /*@pure@*/ @high boolean isEncrypted() {
+	@low @read /*@pure@*/ @high boolean isEncrypted() {
 		return isEncrypted;
 	}
 
-	@low void setEmailIsEncrypted(@high boolean value) {
-		isEncrypted = value; //shoudl encrypt or decrypt the body of the message
+	@low @mut public void setEmailIsEncrypted(@high boolean value) {
+		isEncrypted = value; //should encrypt or decrypt the body of the message
 	}
 
-	@low void setEmailEncryptionKey(@high int value) {
+	@low @mut public void setEmailEncryptionKey(@high int value) {
 		this.encryptionKey = value;
 	}
 
-	@low /*@pure@*/ @high int getEmailEncryptionKey() {
+	@low @read public /*@pure@*/ @high int getEmailEncryptionKey() {
 		return encryptionKey;
 	}
 
@@ -130,29 +132,29 @@ public class Email {
 
 	protected @high int signkey;
 
-	@low void setEmailIsSigned(@high boolean value) {
+	@low @mut public void setEmailIsSigned(@high boolean value) {
 		signed = value;
 	}
 
-	@low void setEmailSignKey(@high int value) {
+	@low @mut public void setEmailSignKey(@high int value) {
 		signkey = value;
 	}
 
-	@low @high boolean isSigned() {
+	@low @read public @high boolean isSigned() {
 		return signed;
 	}
 
-	@low /*@pure@*/ @high int getEmailSignKey() {
+	@low @read public /*@pure@*/ @high int getEmailSignKey() {
 		return signkey;
 	}
 
-	@low protected @high boolean isSignatureVerified;
+	@low @read protected @high boolean isSignatureVerified;
 
-	@low /*@pure@*/ @high boolean isSignatureVerified() {
+	@low @read  public /*@pure@*/ @high boolean isSignatureVerified() {
 		return isSignatureVerified;
 	}
 
-	@low void setIsSignatureVerified(@high boolean value) {
+	@low @mut public void setIsSignatureVerified(@high boolean value) {
 		this.isSignatureVerified = value;
 	}
 }

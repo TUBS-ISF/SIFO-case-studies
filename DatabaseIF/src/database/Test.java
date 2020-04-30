@@ -3,11 +3,12 @@ package database;
 import annotations.high;
 import annotations.highOne;
 import annotations.low;
+import annotations.mut;
 
 public class Test {
 
 	static void test() {
-		@low GUI gui = new GUI();
+		@low @mut GUI gui = new GUI();
 		gui.databaseOne.setEntry("person", "hans", -1);
 		gui.databaseTwo.setEntry("person", "peter", -1);
 		@highOne String name = gui.databaseOne.getEntry("person", 0);

@@ -2,6 +2,7 @@ package paycard;
 
 import annotations.high;
 import annotations.low;
+import annotations.mut;
 import annotations.read;
 
 public class PayCard {
@@ -16,7 +17,7 @@ public class PayCard {
     /*@ spec_public @*/ @high int unsuccessfulOperations; 
     /*@ spec_public @*/ @low int id;
     /*@ spec_public @*/ @high int balance=0; 
-    /*@ spec_public @*/ @high protected LogFile log; 
+    /*@ spec_public @*/ @high @mut protected LogFile log; 
     
     public PayCard(@high int limit, @low int id) {
 		balance = 0;
@@ -34,7 +35,7 @@ public class PayCard {
     /*@
       @ ensures \result.limit==100;
       @*/
-    public static PayCard createJuniorCard() {
+    public static @low @mut PayCard createJuniorCard() {
     	return new PayCard(100, 0);
     }
     
@@ -60,9 +61,10 @@ public class PayCard {
       @ public exceptional_behavior
       @ requires amount <= 0;
       @*/
-    @low public @high boolean charge(@low int amount) throws IllegalArgumentException {
+    @low @mut public @high boolean charge(@low int amount) throws IllegalArgumentException {
 		if (amount <= 0) {
-		    throw new IllegalArgumentException();
+			return false;
+//		    throw new IllegalArgumentException();
 		}
 		@high int intermediate = this.balance;
 	    @high boolean result = this.balance+amount<this.limit;
@@ -83,8 +85,8 @@ public class PayCard {
       @ assignable \everything;
       @ ensures balance >= \old(balance);
       @*/
-    @low public void chargeAndRecord(@low int amount) {
-		@high LogFile logFile = log;
+    @low @mut public void chargeAndRecord(@low int amount) {
+		@high @mut LogFile logFile = log;
     	if (charge(amount)) {//high guard
 //		    try {
 			logFile.addRecord(balance);//logFile high

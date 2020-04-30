@@ -3,11 +3,13 @@ package EmailSystem;
 import java.util.ArrayList;
 
 import annotations.low;
+import annotations.mut;
+import annotations.read;
 
 public class AddressBookEntry {
 	@low String alias;
 
-	@low ArrayList<String> receivers;
+	@low @mut ArrayList<String> receivers;
 
 	public AddressBookEntry(@low String alias) {
 		super();
@@ -15,15 +17,15 @@ public class AddressBookEntry {
 		this.receivers = new ArrayList<String>();
 	}
 
-	public void addReceiver(@low String address) { 
+	@low @mut public void addReceiver(@low String address) { 
 		receivers.add(address); 
 	}
 
-	public @low String getAlias() {
+	@low @read public @low String getAlias() {
 		return alias;
 	}
 
-	public @low ArrayList<String> getReceivers() {
+	@low @mut public @low @mut ArrayList<String> getReceivers() {
 		return receivers;
 	}
 

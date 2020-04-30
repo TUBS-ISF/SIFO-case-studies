@@ -1,6 +1,7 @@
 package bankaccount;
 import annotations.high;
 import annotations.low;
+import annotations.mut;
 
 public class Balance {
 
@@ -16,7 +17,7 @@ public class Balance {
 	 ensures (!\result ==> balance == \old(balance)) 
 	  && (\result ==> balance == \old(balance) + x); 
 	assignable balance; @*/
-	@high @high boolean updateBalance (@low int x, @high int OVERDRAFT_LIMIT) {
+	@high @mut public @high boolean updateBalance (@low int x, @high int OVERDRAFT_LIMIT) {
 		@high int newBalance = balance + x;
 		@high boolean result = true;
 		if (newBalance < OVERDRAFT_LIMIT) {
@@ -31,7 +32,7 @@ public class Balance {
 	 ensures (!\result ==> balance == \old(balance)) 
 	  && (\result ==> balance == \old(balance) - x);
 	assignable balance; @*/
-	@high @high boolean undoUpdateBalance (@low int x, @high int OVERDRAFT_LIMIT) {
+	@high @mut public @high boolean undoUpdateBalance (@low int x, @high int OVERDRAFT_LIMIT) {
 		@high int newBalance = balance - x;
 		@high boolean result = true;
 		if (newBalance < OVERDRAFT_LIMIT) {
@@ -46,7 +47,7 @@ public class Balance {
 	 ensures (!\result ==> withdraw == \old(withdraw)) 
 	  && (\result ==> withdraw <= \old(withdraw));
 	assignable withdraw; @*/
-	@high public @high boolean update(@low int x, @high int DAILY_LIMIT, @high int OVERDRAFT_LIMIT) {
+	@high @mut public @high boolean update(@low int x, @high int DAILY_LIMIT, @high int OVERDRAFT_LIMIT) {
 		@high int newWithdraw = withdraw;
 		@high int oldWithdraw = withdraw;
 		@high boolean result = true;
@@ -69,7 +70,7 @@ public class Balance {
 	 ensures (!\result ==> withdraw == \old(withdraw)) 
 	  && (\result ==> withdraw >= \old(withdraw));
 	assignable withdraw; @*/
-	@high public @high boolean undoUpdate(@low int x, @high int DAILY_LIMIT, @high int OVERDRAFT_LIMIT) {
+	@high @mut public @high boolean undoUpdate(@low int x, @high int DAILY_LIMIT, @high int OVERDRAFT_LIMIT) {
 		@high int newWithdraw = withdraw;
 		@high int oldWithdraw = withdraw;
 		@high boolean result = true;

@@ -2,6 +2,7 @@ package paycard;
 
 import annotations.high;
 import annotations.low;
+import annotations.mut;
 import annotations.read;
 
 public class LogRecord {
@@ -26,7 +27,7 @@ public class LogRecord {
       @   ensures this.balance == balance && 
       @           transactionId == \old(transactionCounter);
       @*/
-    @low public void setRecord(@high int balance)  { //throws CardException
+    @low @mut public void setRecord(@high int balance)  { //throws CardException
 		if(balance < 0){
 	//	    throw new CardException();
 		} else {

@@ -2,6 +2,7 @@ package paycard;
 
 import annotations.high;
 import annotations.low;
+import annotations.mut;
 import annotations.read;
 
 public class LogFile {
@@ -13,7 +14,7 @@ public class LogFile {
       @*/
     private /*@ spec_public @*/ @high static int logFileSize = 3;
     private /*@ spec_public @*/ @high int currentRecord;
-    private /*@ spec_public @*/ @high LogRecord[] logArray = new LogRecord[logFileSize];
+    private /*@ spec_public @*/ @high @mut LogRecord[] logArray = new LogRecord[logFileSize];
     
     public /*@pure@*/ LogFile() {
 	@high int i=0;
@@ -30,7 +31,7 @@ public class LogFile {
       @        currentRecord == \old(currentRecord) + 1 : currentRecord == 0;
       @    ensures logArray[currentRecord].balance == balance;
       @*/
-    @low public void addRecord(@high int balance) {//high method high balance //throws CardException
+    @low @mut public void addRecord(@high int balance) {//high method high balance //throws CardException
 	currentRecord++;
 	@high int tmpRecord = currentRecord;
 	if (currentRecord == logFileSize) { //high guard
@@ -46,8 +47,8 @@ public class LogFile {
       @             logArray[i].balance <= \result.balance);
       @    diverges true;
       @ */
-    @low @read public /*@pure@*/ @high LogRecord getMaximumRecord(){//return high
-	@high LogRecord max = logArray[0];
+    @low @mut public /*@pure@*/ @high @mut LogRecord getMaximumRecord(){//return high
+	@high @mut LogRecord max = logArray[0];
 	@high int i=1;
 	/*@ loop_invariant
 	  @   0<=i && i <= logArray.length 
@@ -57,7 +58,7 @@ public class LogFile {
 	  @ assignable max, i;
 	  @*/
 	while(i<logArray.length){//high guard
-	    @high LogRecord lr = logArray[i++];
+	    @high @mut LogRecord lr = logArray[i++];
 	    if (lr.getBalance() > max.getBalance()){ //high guard
 		max = lr;//high variables
 	    }
